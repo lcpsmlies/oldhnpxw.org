@@ -1,0 +1,177 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-11-07 17:00:13
+ * @LastEditTime: 2021-08-03 17:44:15
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \hnrcweb\hnrcQrcode.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>证书扫码</title>
+    <script src="https://cdn1.peixunyun.cn/jjymall/plugins/jquery%403.4.1/jquery.min.js"></script>
+    <script src="https://cdn1.peixunyun.cn/qiniuyun/jjy-plugins-demo/vue/2.7.16/dist/vue.min.js"></script>
+    <style>
+      .app {
+        padding: 38% 12px 0;
+        text-align: center;
+        font-size: 16px;
+      }
+      .cert-img {
+        width: 120px;
+        height: 120px;
+        position: absolute;
+        right: 80px;
+        top: 300px;
+        z-index: 1;
+        opacity: 0.8;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-color: #d8d8d8;
+        font-size: 14px;
+        color: #444444;
+        line-height: 18px;
+        position: relative;
+
+        td {
+          text-align: center;
+          padding: 12px;
+        }
+        th {
+          font-weight: 400 !important;
+          padding: 14px 24rpx;
+        }
+
+        .title {
+          text-align: center;
+          font-size: 14px;
+          font-weight: bold !important;
+          color: #222222;
+          line-height: 14px;
+          padding: 17px 0;
+        }
+      }
+
+      .table-top {
+        border-bottom: 0;
+        margin-top: 40px;
+        th {
+          width: 234rpx;
+          text-align: left;
+          padding: 12px;
+        }
+
+        td {
+          padding: 14px 50rpx;
+        }
+      }
+
+      .table-bottom {
+        border-top: 0;
+
+        th {
+          width: 526rpx;
+          text-align: left;
+          padding: 12px;
+        }
+
+        td {
+          text-align: center;
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <table class="table-top" border="1">
+        <tr>
+          <td colspan="2" class="title">
+            湖南省专业技术人员继续教育合格证
+          </td>
+        </tr>
+        <tr>
+          <th>姓名</th>
+          <td>肖洋</td>
+        </tr>
+        <tr>
+          <th>性别</th>
+          <td>男</td>
+        </tr>
+        <tr>
+          <th>身份证</th>
+          <td>43052719931122721X</td>
+        </tr>
+        <tr>
+          <th>总学时</th>
+          <td>30.0</td>
+        </tr>
+        <tr>
+          <th>学习时间</th>
+          <td>2026-06-07至2026-06-15</td>
+        </tr>
+        <tr>
+          <th>证书编码</th>
+          <td> JX43052721604975</td>
+        </tr>
+        <tr>
+          <th>施教机构</th>
+          <td>湖南人才市场有限公司</td>
+        </tr>
+        <img class="cert-img" src="./img/zhang.png" alt="二维码" />
+      </table>
+
+     <table class="table-bottom" border="1">
+  <tr>
+    <td class="title" style="border-top: 0;">学习内容或科目</td>
+    <td class="title" style="border-top: 0; min-width: 60px;">获得</td>
+  </tr>
+  <tr>
+    <th>2021年湖南省公需科目培训班</th>
+    <td>30.0</td>
+  </tr>
+</table>
+    </div>
+    <script>
+      new Vue({
+        el: "#app", // 挂载到 #app
+        data: {
+          learnDetailScanVo: {}, // 学习明细
+          count: 0,
+        },
+        created() {
+          this.getUserCertLearnDetailCategoryDetail();
+        },
+        methods: {
+          getQueryString(name) {
+            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            const r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+          },
+          getUserCertLearnDetailCategoryDetail() {
+            const id = this.getQueryString("id") || "";
+            const type = this.getQueryString("type") || "";
+            const ts = this;
+            $.get(
+              `${location.origin}/api/usr/certificate/getNewCertQrCode`,
+              {
+                cerId: id,
+                type: type === "year" ? 2 : 1, // 1 普通证书内容 2年度证书内容
+              },
+              function(data, status, xhr) {
+                ts.learnDetailScanVo = data.data;
+              }
+            );
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
